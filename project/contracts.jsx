@@ -1,6 +1,97 @@
 /* ASSIST FORWARD — 電子契約 list/archive + detail — Phase 2 */
 const { useState } = React;
 
+/* ===================== EDIT MODAL ===================== */
+function EditContractModal({ contract, onClose }) {
+  const D = window.AF_CONTRACTS;
+  const [form, setForm] = useState({
+    seller: contract.seller,
+    buyer: contract.buyer,
+    amount: contract.amount,
+    status: contract.status,
+    esign: contract.esign,
+    store: contract.store,
+  });
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  return (
+    <div className="fm-overlay" onClick={onClose}>
+      <div className="fm-modal" style={{maxWidth:600}} onClick={e => e.stopPropagation()}>
+        <div className="fm-head">
+          <h3><i className="ti ti-edit" style={{marginRight:8,color:"#ee3124"}}></i>契約書を編集 <span style={{fontSize:13,fontWeight:500,color:"#9aa6ba",marginLeft:8}}>{contract.no}</span></h3>
+          <button className="fm-close" onClick={onClose}><i className="ti ti-x"></i></button>
+        </div>
+        <div className="fm-body">
+          <div className="fm-grid">
+            <div className="fm-field full">
+              <label><i className="ti ti-tag"></i>契約種別</label>
+              <div className="fm-inp" style={{background:"#f5f6f8",color:"#9aa6ba",cursor:"not-allowed"}}>
+                {D.TYPE_META[contract.type].label}
+              </div>
+            </div>
+          </div>
+          <div className="fm-grid">
+            <div className="fm-field full">
+              <label><i className="ti ti-car"></i>車両 / 車台番号</label>
+              <div className="fm-inp" style={{background:"#f5f6f8",color:"#9aa6ba",cursor:"not-allowed"}}>
+                {contract.veh} ・ {contract.vid}
+              </div>
+            </div>
+          </div>
+          <div className="fm-grid">
+            <div className="fm-field">
+              <label><i className="ti ti-user"></i>売主</label>
+              <input className="fm-inp" value={form.seller} onChange={e => set("seller", e.target.value)} />
+            </div>
+            <div className="fm-field">
+              <label><i className="ti ti-user"></i>買主</label>
+              <input className="fm-inp" value={form.buyer} onChange={e => set("buyer", e.target.value)} />
+            </div>
+          </div>
+          <div className="fm-grid">
+            <div className="fm-field">
+              <label><i className="ti ti-currency-yen"></i>契約金額</label>
+              <input className="fm-inp" type="number" value={form.amount} onChange={e => set("amount", e.target.value)} />
+            </div>
+            <div className="fm-field">
+              <label><i className="ti ti-shield-half"></i>ステータス</label>
+              <div className="fm-sel">
+                <select value={form.status} onChange={e => set("status", e.target.value)}>
+                  {Object.entries(D.STATUS_META).map(([k, v]) => (
+                    <option key={k} value={k}>{v.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className="fm-grid">
+            <div className="fm-field">
+              <label><i className="ti ti-writing-sign"></i>署名方式</label>
+              <div className="fm-sel">
+                <select value={form.esign} onChange={e => set("esign", e.target.value)}>
+                  <option value="sms">SMS認証</option>
+                  <option value="email">メール認証</option>
+                </select>
+              </div>
+            </div>
+            <div className="fm-field">
+              <label><i className="ti ti-building-store"></i>作成店舗</label>
+              <input className="fm-inp" value={form.store} onChange={e => set("store", e.target.value)} />
+            </div>
+          </div>
+          <div className="fm-note blue">
+            <i className="ti ti-info-circle"></i>
+            <span>車両・車台番号・契約種別は変更できません。変更が必要な場合は契約書を再作成してください。</span>
+          </div>
+          <button className="fm-save dark" onClick={onClose}>
+            <i className="ti ti-device-floppy"></i>変更を保存
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function yen2(n){ return "¥" + Number(n).toLocaleString("ja-JP"); }
 
 function ECTypeChip({ type }) {
@@ -21,6 +112,7 @@ function ECStatus({ status }) {
 function Contracts({ go, role }) {
   const D = window.AF_CONTRACTS;
   const [wiz,setWiz] = useState(false);
+  const [editTarget,setEditTarget] = useState(null);
   const [filter,setFilter] = useState("all");
   const rows = filter==="all" ? D.contracts : D.contracts.filter(c=>c.type===filter);
 
@@ -30,7 +122,7 @@ function Contracts({ go, role }) {
     { label:"本部承認待ち", value:D.contracts.filter(c=>c.status==="hq_review").length, icon:"ti-gavel", cls:"ico-purple" },
     { label:"署名済 (完了)", value:D.contracts.filter(c=>c.status==="completed").length, icon:"ti-circle-check", cls:"ico-green" }
   ];
-  const cols = "1.3fr 1.7fr 1.8fr 1.6fr 1.1fr 1.1fr 0.7fr";
+  const cols = "1.3fr 1.7fr 1.8fr 1.6fr 1.1fr 1.1fr 1fr";
   const tabs = [["all","すべて"],["purchase","買取契約書"],["consign","委託販売"],["order","発注書・請求書"],["confirm","確認書"]];
 
   return (
@@ -66,7 +158,7 @@ function Contracts({ go, role }) {
           <div>契約金額</div><div>ステータス</div><div style={{textAlign:"right"}}>操作</div>
         </div>
         {rows.map((c,i)=>(
-          <div className="trow" style={{gridTemplateColumns:cols}} key={i}>
+          <div className="trow trow-link" style={{gridTemplateColumns:cols}} key={i} onClick={()=>go("contracts/"+c.no)}>
             <div>
               <div className="ec-serial">{c.no}</div>
               <div className="ec-retention"><i className="ti ti-archive" style={{fontSize:12}}></i>7年保管</div>
@@ -82,7 +174,8 @@ function Contracts({ go, role }) {
             </div>
             <div className="cell-strong">{yen2(c.amount)}</div>
             <div><ECStatus status={c.status} /></div>
-            <div className="row-actions">
+            <div className="row-actions" onClick={e=>e.stopPropagation()}>
+              <button className="btn btn-ghost btn-sm" onClick={()=>setEditTarget(c)}><i className="ti ti-edit"></i></button>
               <button className="btn btn-navy btn-sm" onClick={()=>go("contracts/"+c.no)}>開く</button>
             </div>
           </div>
@@ -94,6 +187,7 @@ function Contracts({ go, role }) {
       </div>
 
       {wiz && React.createElement(window.ContractWizard, { onClose:()=>setWiz(false), go })}
+      {editTarget && <EditContractModal contract={editTarget} onClose={()=>setEditTarget(null)} />}
     </div>
   );
 }

@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ASSIST FORWARD — 本部管理</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700;1,800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASSIST FORWARD — 本部管理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <style>
 /* ========================================================================
    ASSIST FORWARD — admin platform prototype
    Design tokens extracted from product screenshots
@@ -171,6 +171,8 @@ a{color:inherit;text-decoration:none;}
 .btn-navy:hover{background:#1b2742;}
 .btn-light{background:#fff;color:var(--ink);border:1px solid var(--line-2);font-weight:600;}
 .btn-light:hover{background:#f8fafc;}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line-2);}
+.btn-ghost:hover{background:#f0f4ff;color:var(--ink);border-color:#c5d0e8;}
 .btn-sm{padding:8px 16px;font-size:13px;border-radius:10px;}
 
 /* ---------- KPI cards ---------- */
@@ -226,6 +228,8 @@ a{color:inherit;text-decoration:none;}
   transition:background .12s;font-size:14px;}
 .trow:last-child{border-bottom:none;}
 .trow:hover{background:#fafbfc;}
+.trow-link{cursor:pointer;}
+.trow-link:hover{background:#f0f4ff;}
 .cell-strong{font-weight:700;font-style:italic;color:var(--ink);}
 .cell-sub{font-size:11.5px;color:var(--muted);margin-top:3px;}
 .tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;
@@ -1009,15 +1013,14 @@ a{color:inherit;text-decoration:none;}
   .ec-docgrid{grid-template-columns:repeat(2,1fr);}
 }
 
-</style>
+  </style>
 </head>
 <body>
-<div id="root"></div>
-<script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
-<script>
-/* Sample data for ASSIST FORWARD prototype — drawn from product screenshots */
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+  <script>/* Sample data for ASSIST FORWARD prototype — drawn from product screenshots */
 window.AF_DATA = (function(){
 
   const vehicles = [
@@ -1137,10 +1140,8 @@ window.AF_DATA = (function(){
   return {vehicles, negotiations, customers, stores, storeUsers, adminUsers, masterReview, afInspect,
           storeSearch, storeListings, storeActivity, storeDeals, storeStaff};
 })();
-
 </script>
-<script>
-/* ASSIST FORWARD — 電子契約 (Electronic Contracts) sample data — Phase 2 */
+  <script>/* ASSIST FORWARD — 電子契約 (Electronic Contracts) sample data — Phase 2 */
 window.AF_CONTRACTS = (function(){
 
   // status: draft / hq_review / awaiting_sign / partial / completed
@@ -1217,10 +1218,8 @@ window.AF_CONTRACTS = (function(){
 
   return { contracts, TYPE_META, STATUS_META, assessments, declarations, reqDocs, bankMaster };
 })();
-
 </script>
-<script type="text/babel">
-/* ASSIST FORWARD — shell: sidebar, topbar, shared helpers */
+  <script type="text/babel">/* ASSIST FORWARD — shell: sidebar, topbar, shared helpers */
 const { useState, useEffect, useRef } = React;
 
 const NAV_HQ = [
@@ -1418,10 +1417,8 @@ function VThumb() {
 function yen(n){ return "¥" + Number(n).toLocaleString("ja-JP"); }
 
 Object.assign(window, { NAV_HQ, NAV_STORE, Sidebar, Topbar, Shell, PageHead, Avatar, StatusActive, VThumb, yen });
-
 </script>
-<script type="text/babel">
-/* ASSIST FORWARD — Dashboard, Vehicle List, Vehicle Detail */
+  <script type="text/babel">/* ASSIST FORWARD — Dashboard, Vehicle List, Vehicle Detail */
 const { useState, useEffect, useRef } = React;
 
 /* ============================ DASHBOARD ============================ */
@@ -1816,10 +1813,8 @@ function AiTab() {
 }
 
 Object.assign(window, { Dashboard, VehicleList, VehicleDetail });
-
 </script>
-<script type="text/babel">
-/* ASSIST FORWARD — management pages */
+  <script type="text/babel">/* ASSIST FORWARD — management pages */
 const { useState, useEffect, useRef } = React;
 
 /* ===================== NEGOTIATION (応札・商談管理) ===================== */
@@ -2215,10 +2210,8 @@ function AFInspect() {
 }
 
 Object.assign(window, { Negotiation, ChatModal, Customers, Stores, StoreUsers, AdminUsers, MasterReview, AFInspect });
-
 </script>
-<script type="text/babel">
-/* ASSIST FORWARD — create/edit form modals (admin user, store user, store) */
+  <script type="text/babel">/* ASSIST FORWARD — create/edit form modals (admin user, store user, store) */
 const { useState } = React;
 
 function FmAvatar() {
@@ -2464,10 +2457,8 @@ function StaffForm({ onClose }) {
 }
 
 Object.assign(window, { AdminUserForm, StoreUserForm, StoreForm, StaffForm });
-
 </script>
-<script type="text/babel">
-/* ASSIST FORWARD — store-admin (加盟店) pages */
+  <script type="text/babel">/* ASSIST FORWARD — store-admin (加盟店) pages */
 const { useState } = React;
 
 /* ===================== 加盟店ダッシュボード ===================== */
@@ -2915,10 +2906,8 @@ function StoreStaff() {
 }
 
 Object.assign(window, { StoreDashboard, VehicleSearch, StoreVehicleDetail, Favorites, InquiryHistory, Inventory, NegotiationHistory, StoreStaff });
-
 </script>
-<script type="text/babel">
-/* ASSIST FORWARD — 新車車両登録ウィザード (7-step vehicle registration) */
+  <script type="text/babel">/* ASSIST FORWARD — 新車車両登録ウィザード (7-step vehicle registration) */
 const { useState } = React;
 
 const PREFECTURES = ["北海道","青森県","東京都","神奈川県","千葉県","新潟県","静岡県","愛知県","三重県","大阪府","宮崎県"];
@@ -3314,11 +3303,100 @@ function RegisterWizard({ onClose }) {
 }
 
 Object.assign(window, { RegisterWizard });
-
 </script>
-<script type="text/babel">
-/* ASSIST FORWARD — 電子契約 list/archive + detail — Phase 2 */
+  <script type="text/babel">/* ASSIST FORWARD — 電子契約 list/archive + detail — Phase 2 */
 const { useState } = React;
+
+/* ===================== EDIT MODAL ===================== */
+function EditContractModal({ contract, onClose }) {
+  const D = window.AF_CONTRACTS;
+  const [form, setForm] = useState({
+    seller: contract.seller,
+    buyer: contract.buyer,
+    amount: contract.amount,
+    status: contract.status,
+    esign: contract.esign,
+    store: contract.store,
+  });
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  return (
+    <div className="fm-overlay" onClick={onClose}>
+      <div className="fm-modal" style={{maxWidth:600}} onClick={e => e.stopPropagation()}>
+        <div className="fm-head">
+          <h3><i className="ti ti-edit" style={{marginRight:8,color:"#ee3124"}}></i>契約書を編集 <span style={{fontSize:13,fontWeight:500,color:"#9aa6ba",marginLeft:8}}>{contract.no}</span></h3>
+          <button className="fm-close" onClick={onClose}><i className="ti ti-x"></i></button>
+        </div>
+        <div className="fm-body">
+          <div className="fm-grid">
+            <div className="fm-field full">
+              <label><i className="ti ti-tag"></i>契約種別</label>
+              <div className="fm-inp" style={{background:"#f5f6f8",color:"#9aa6ba",cursor:"not-allowed"}}>
+                {D.TYPE_META[contract.type].label}
+              </div>
+            </div>
+          </div>
+          <div className="fm-grid">
+            <div className="fm-field full">
+              <label><i className="ti ti-car"></i>車両 / 車台番号</label>
+              <div className="fm-inp" style={{background:"#f5f6f8",color:"#9aa6ba",cursor:"not-allowed"}}>
+                {contract.veh} ・ {contract.vid}
+              </div>
+            </div>
+          </div>
+          <div className="fm-grid">
+            <div className="fm-field">
+              <label><i className="ti ti-user"></i>売主</label>
+              <input className="fm-inp" value={form.seller} onChange={e => set("seller", e.target.value)} />
+            </div>
+            <div className="fm-field">
+              <label><i className="ti ti-user"></i>買主</label>
+              <input className="fm-inp" value={form.buyer} onChange={e => set("buyer", e.target.value)} />
+            </div>
+          </div>
+          <div className="fm-grid">
+            <div className="fm-field">
+              <label><i className="ti ti-currency-yen"></i>契約金額</label>
+              <input className="fm-inp" type="number" value={form.amount} onChange={e => set("amount", e.target.value)} />
+            </div>
+            <div className="fm-field">
+              <label><i className="ti ti-shield-half"></i>ステータス</label>
+              <div className="fm-sel">
+                <select value={form.status} onChange={e => set("status", e.target.value)}>
+                  {Object.entries(D.STATUS_META).map(([k, v]) => (
+                    <option key={k} value={k}>{v.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+          <div className="fm-grid">
+            <div className="fm-field">
+              <label><i className="ti ti-writing-sign"></i>署名方式</label>
+              <div className="fm-sel">
+                <select value={form.esign} onChange={e => set("esign", e.target.value)}>
+                  <option value="sms">SMS認証</option>
+                  <option value="email">メール認証</option>
+                </select>
+              </div>
+            </div>
+            <div className="fm-field">
+              <label><i className="ti ti-building-store"></i>作成店舗</label>
+              <input className="fm-inp" value={form.store} onChange={e => set("store", e.target.value)} />
+            </div>
+          </div>
+          <div className="fm-note blue">
+            <i className="ti ti-info-circle"></i>
+            <span>車両・車台番号・契約種別は変更できません。変更が必要な場合は契約書を再作成してください。</span>
+          </div>
+          <button className="fm-save dark" onClick={onClose}>
+            <i className="ti ti-device-floppy"></i>変更を保存
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function yen2(n){ return "¥" + Number(n).toLocaleString("ja-JP"); }
 
@@ -3340,6 +3418,7 @@ function ECStatus({ status }) {
 function Contracts({ go, role }) {
   const D = window.AF_CONTRACTS;
   const [wiz,setWiz] = useState(false);
+  const [editTarget,setEditTarget] = useState(null);
   const [filter,setFilter] = useState("all");
   const rows = filter==="all" ? D.contracts : D.contracts.filter(c=>c.type===filter);
 
@@ -3349,7 +3428,7 @@ function Contracts({ go, role }) {
     { label:"本部承認待ち", value:D.contracts.filter(c=>c.status==="hq_review").length, icon:"ti-gavel", cls:"ico-purple" },
     { label:"署名済 (完了)", value:D.contracts.filter(c=>c.status==="completed").length, icon:"ti-circle-check", cls:"ico-green" }
   ];
-  const cols = "1.3fr 1.7fr 1.8fr 1.6fr 1.1fr 1.1fr 0.7fr";
+  const cols = "1.3fr 1.7fr 1.8fr 1.6fr 1.1fr 1.1fr 1fr";
   const tabs = [["all","すべて"],["purchase","買取契約書"],["consign","委託販売"],["order","発注書・請求書"],["confirm","確認書"]];
 
   return (
@@ -3385,7 +3464,7 @@ function Contracts({ go, role }) {
           <div>契約金額</div><div>ステータス</div><div style={{textAlign:"right"}}>操作</div>
         </div>
         {rows.map((c,i)=>(
-          <div className="trow" style={{gridTemplateColumns:cols}} key={i}>
+          <div className="trow trow-link" style={{gridTemplateColumns:cols}} key={i} onClick={()=>go("contracts/"+c.no)}>
             <div>
               <div className="ec-serial">{c.no}</div>
               <div className="ec-retention"><i className="ti ti-archive" style={{fontSize:12}}></i>7年保管</div>
@@ -3401,7 +3480,8 @@ function Contracts({ go, role }) {
             </div>
             <div className="cell-strong">{yen2(c.amount)}</div>
             <div><ECStatus status={c.status} /></div>
-            <div className="row-actions">
+            <div className="row-actions" onClick={e=>e.stopPropagation()}>
+              <button className="btn btn-ghost btn-sm" onClick={()=>setEditTarget(c)}><i className="ti ti-edit"></i></button>
               <button className="btn btn-navy btn-sm" onClick={()=>go("contracts/"+c.no)}>開く</button>
             </div>
           </div>
@@ -3413,6 +3493,7 @@ function Contracts({ go, role }) {
       </div>
 
       {wiz && React.createElement(window.ContractWizard, { onClose:()=>setWiz(false), go })}
+      {editTarget && <EditContractModal contract={editTarget} onClose={()=>setEditTarget(null)} />}
     </div>
   );
 }
@@ -3618,10 +3699,8 @@ function ContractDetail({ no, go, role }) {
 }
 
 Object.assign(window, { Contracts, ContractDetail, ECTypeChip, ECStatus, yen2 });
-
 </script>
-<script type="text/babel">
-/* ASSIST FORWARD — 契約作成ウィザード (Electronic Contract generation) — Phase 2 */
+  <script type="text/babel">/* ASSIST FORWARD — 契約作成ウィザード (Electronic Contract generation) — Phase 2 */
 const { useState } = React;
 
 const ECW_TYPES = [
@@ -3983,10 +4062,8 @@ function ContractWizard({ onClose, go }) {
 }
 
 Object.assign(window, { ContractWizard });
-
 </script>
-<script type="text/babel">
-/* ASSIST FORWARD — root app: login + hash router */
+  <script type="text/babel">/* ASSIST FORWARD — root app: login + hash router */
 const { useState, useEffect } = React;
 
 const CREDS = {
@@ -4109,10 +4186,8 @@ function App() {
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);
-
 </script>
-<script>
-/* ASSIST FORWARD — bilingual (JA → EN) runtime translation layer.
+  <script>/* ASSIST FORWARD — bilingual (JA → EN) runtime translation layer.
    Walks text nodes / placeholders / readonly values under <body> and swaps
    Japanese for English using DICT. Survives React re-renders via MutationObserver.
    Emails (contain "@") and pure numbers are never matched. */
@@ -4683,7 +4758,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App />);
   if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();
 })();
-
 </script>
 </body>
 </html>
