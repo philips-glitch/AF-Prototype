@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>納品・検収完了証明書 — Assist Forward (AAF)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c2430;
+    --muted:#5d6675;
+    --line:#d5dae2;
+    --line-strong:#aeb6c2;
+    --navy:#16263f;
+    --navy-soft:#2a3f5f;
+    --accent:#9a7b3f;       /* muted gold — official seal feel */
+    --ok:#2f7d56;
+    --band:#f3f1ea;         /* warm parchment for info band */
+    --zebra:#f7f8fa;
+    --page-bg:#e7e9ee;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:var(--page-bg);}
+  body{
+    font-family:"Noto Sans JP",sans-serif;
+    color:var(--ink);
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    padding:32px 0 64px;
+    font-feature-settings:"palt" 1;
+  }
+
+  .sheet{
+    width:210mm;
+    min-height:297mm;
+    background:#fff;
+    margin:0 auto 26px;
+    padding:19mm 18mm 16mm;
+    position:relative;
+    box-shadow:0 6px 26px rgba(20,38,63,.14);
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ---------- running header ---------- */
+  .runhead{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:14px;
+    padding-bottom:7px;
+    border-bottom:1.5px solid var(--navy);
+    margin-bottom:5px;
+    white-space:nowrap;
+  }
+  .runhead .org{font-weight:700;font-size:9.5px;letter-spacing:.03em;color:var(--navy);}
+  .runhead .mid{font-size:9px;color:var(--muted);}
+  .runhead .doc{font-size:9px;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .runline{height:2px;background:var(--accent);width:64px;margin-bottom:18px;}
+
+  /* ---------- title block ---------- */
+  .titlewrap{text-align:center;margin:6px 0 22px;}
+  .kicker{
+    font-size:10.5px;letter-spacing:.42em;color:var(--accent);
+    font-weight:700;text-indent:.42em;margin-bottom:12px;
+  }
+  .doctitle{
+    font-family:"Noto Serif JP",serif;font-weight:700;
+    font-size:30px;letter-spacing:.10em;color:var(--navy);line-height:1.3;
+  }
+  .titlerule{
+    width:46px;height:2.5px;background:var(--navy);margin:16px auto 14px;
+  }
+  .subtitle{
+    font-size:13px;color:var(--ink);font-weight:500;letter-spacing:.02em;
+  }
+  .subtitle .en{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:3px;letter-spacing:.01em;}
+
+  /* ---------- info grid ---------- */
+  .infobox{
+    border:1px solid var(--line-strong);
+    margin-bottom:26px;
+    background:var(--band);
+  }
+  .inforow{
+    display:grid;grid-template-columns:148px 1fr;
+    border-bottom:1px solid var(--line);
+  }
+  .inforow:last-child{border-bottom:none;}
+  .inforow .k{
+    padding:9px 16px;font-size:11.5px;font-weight:700;color:var(--navy);
+    border-right:1px solid var(--line);background:rgba(255,255,255,.45);
+    display:flex;align-items:center;
+  }
+  .inforow .v{
+    padding:9px 16px;font-size:11.5px;color:var(--ink);display:flex;align-items:center;
+  }
+  .inforow .v.blank{color:var(--muted);}
+
+  /* ---------- sections ---------- */
+  .section{margin-bottom:22px;}
+  .sec-head{
+    display:flex;align-items:center;gap:11px;margin-bottom:11px;
+  }
+  .sec-num{
+    flex:none;width:25px;height:25px;border-radius:2px;background:var(--navy);
+    color:#fff;font-family:"Noto Serif JP",serif;font-weight:600;font-size:13px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .sec-title{
+    font-family:"Noto Serif JP",serif;font-weight:600;font-size:15.5px;
+    color:var(--navy);letter-spacing:.04em;
+  }
+  .sec-title .en{font-size:10px;color:var(--muted);font-weight:400;font-family:"Noto Sans JP",sans-serif;margin-left:8px;letter-spacing:.02em;}
+  .section p{font-size:11.6px;color:#2a3340;margin-bottom:11px;text-align:justify;}
+  .section p:last-child{margin-bottom:0;}
+
+  /* ---------- deliverables table ---------- */
+  table.deliv{
+    width:100%;border-collapse:collapse;font-size:10.8px;
+  }
+  table.deliv thead th{
+    background:var(--navy);color:#fff;font-weight:500;letter-spacing:.03em;
+    padding:9px 11px;text-align:left;font-size:10.5px;border-right:1px solid rgba(255,255,255,.16);
+  }
+  table.deliv thead th:last-child{border-right:none;}
+  table.deliv th.c-no{width:34px;text-align:center;}
+  table.deliv th.c-mod{width:118px;}
+  table.deliv th.c-st{width:96px;text-align:center;}
+  table.deliv tbody td{
+    padding:7.5px 11px;border-bottom:1px solid var(--line);vertical-align:middle;
+    border-right:1px solid var(--line);
+  }
+  table.deliv tbody td:last-child{border-right:none;}
+  table.deliv tbody tr:nth-child(even){background:var(--zebra);}
+  td.c-no{text-align:center;color:var(--muted);font-variant-numeric:tabular-nums;}
+  td.c-mod{font-weight:500;color:var(--navy-soft);font-size:10.4px;}
+  td.c-st{text-align:center;white-space:nowrap;}
+  .badge{
+    display:inline-flex;align-items:center;gap:5px;
+    color:var(--ok);font-weight:700;font-size:10.4px;
+  }
+  .badge .tick{
+    width:13px;height:13px;border-radius:50%;background:var(--ok);color:#fff;
+    display:inline-flex;align-items:center;justify-content:center;font-size:8px;line-height:1;
+  }
+  .group-tag{
+    display:inline-block;font-size:8.5px;font-weight:700;letter-spacing:.05em;
+    color:var(--accent);
+  }
+
+  /* ---------- notes ---------- */
+  .notes{
+    border:1px solid var(--line);border-left:3px solid var(--accent);
+    background:#fcfbf7;padding:13px 18px 13px;margin-top:4px;
+  }
+  .notes .nh{font-size:11px;font-weight:700;color:var(--navy);margin-bottom:8px;letter-spacing:.04em;}
+  .notes ul{list-style:none;}
+  .notes li{
+    font-size:10.6px;color:#33404f;padding-left:16px;position:relative;margin-bottom:6px;line-height:1.7;text-align:justify;
+  }
+  .notes li:last-child{margin-bottom:0;}
+  .notes li::before{
+    content:"";position:absolute;left:2px;top:8px;width:5px;height:5px;
+    border-radius:50%;background:var(--accent);
+  }
+
+  /* ---------- signatures ---------- */
+  .sign-intro{font-size:11.4px;color:#2a3340;margin-bottom:20px;text-align:justify;}
+  .sign-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .sign-card{border:1px solid var(--line-strong);}
+  .sign-card .party{
+    background:var(--navy);color:#fff;padding:11px 16px;
+  }
+  .sign-card .party .nm{font-weight:700;font-size:12px;letter-spacing:.02em;}
+  .sign-card .party .role{font-size:9.5px;color:#c7d2e2;margin-top:2px;letter-spacing:.04em;}
+  .sign-card .body{padding:16px 16px 14px;}
+  .sign-field{display:grid;grid-template-columns:62px 1fr;align-items:end;margin-bottom:15px;}
+  .sign-field .lab{font-size:10.5px;font-weight:700;color:var(--navy);}
+  .sign-field .ln{border-bottom:1px solid var(--line-strong);min-height:20px;font-size:11px;color:var(--ink);padding:0 4px 2px;}
+  .sign-field .ln.filled{font-weight:500;}
+  .stamp{
+    margin-top:6px;display:flex;align-items:center;justify-content:center;
+    height:78px;border:1px dashed var(--line-strong);border-radius:3px;color:var(--muted);
+    font-size:10px;letter-spacing:.3em;
+  }
+
+  /* ---------- footer ---------- */
+  .sheet-foot{
+    margin-top:auto;padding-top:12px;border-top:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:8.7px;color:var(--muted);letter-spacing:.02em;
+  }
+  .sheet-foot .conf{font-weight:700;color:var(--navy-soft);letter-spacing:.06em;}
+  .confidential-note{font-size:9px;color:var(--muted);font-style:normal;margin-top:18px;text-align:center;letter-spacing:.02em;}
+
+  .spacer{flex:1 1 auto;}
+
+  @media screen and (max-width:740px){
+    .sheet{width:100%;padding:24px 18px;}
+    body{padding:14px 0 40px;}
+  }
+
+  @media print{
+    html,body{background:#fff;padding:0;}
+    .sheet{
+      width:auto;min-height:0;margin:0;box-shadow:none;
+      padding:16mm 16mm 12mm;
+      page-break-after:always;
+    }
+    .sheet:last-child{page-break-after:auto;}
+    @page{size:A4;margin:0;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 ============ -->
+<section class="sheet" data-screen-label="Page 1">
+  <header class="runhead">
+    <span class="org">PT LOGIQUE DIGITAL INDONESIA</span>
+    <span class="mid">納品・検収完了証明書</span>
+    <span class="doc">Doc No: LST/BAST/AF/2025</span>
+  </header>
+  <div class="runline"></div>
+
+  <div class="titlewrap">
+    <div class="kicker">CERTIFICATE OF DELIVERY &amp; ACCEPTANCE</div>
+    <h1 class="doctitle">納品・検収完了証明書</h1>
+    <div class="titlerule"></div>
+    <div class="subtitle">
+      Assist Forward（AAF）— 車両委託販売管理プラットフォーム
+      <span class="en">Assist Forward (AAF) – Vehicle Consignment Sales Management Platform</span>
+    </div>
+  </div>
+
+  <div class="infobox">
+    <div class="inforow"><div class="k">プロジェクト名</div><div class="v">Assist Forward（AAF）— 車両委託販売管理プラットフォーム</div></div>
+    <div class="inforow"><div class="k">対象範囲</div><div class="v">Web プラットフォーム、モバイルアプリケーション（iOS・Android）</div></div>
+    <div class="inforow"><div class="k">顧客</div><div class="v">Apple Auto Network Co., Ltd.（Applenet / HITS）</div></div>
+    <div class="inforow"><div class="k">受託者</div><div class="v">PT Logique Digital Indonesia</div></div>
+    <div class="inforow"><div class="k">納品日</div><div class="v">2025年6月1日</div></div>
+    <div class="inforow"><div class="k">発行日</div><div class="v blank">________________________________</div></div>
+    <div class="inforow"><div class="k">作成</div><div class="v">PT Logique Digital Indonesia — プロジェクトマネジメントオフィス</div></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-head">
+      <span class="sec-num">1</span>
+      <span class="sec-title">目的および範囲<span class="en">Purpose &amp; Scope</span></span>
+    </div>
+    <p>本納品・検収完了証明書は、PT Logique Digital Indonesia から Apple Auto Network Co., Ltd.（以下「顧客」といいます）への Assist Forward（AAF）プラットフォームの完成および引き渡しを正式に記録するものです。本書類は、ユーザー受け入れテスト（UAT）の正常な完了を受けた正式な検収記録として機能します。</p>
+    <p>本書類に記載されたすべての成果物は、合意済みの業務要件定義書（BRD）および UAT テストケースに従って、実装・テスト・検証されています。本書類への署名をもって、顧客は本書に記載のすべての項目の受領および検収を確認するものとします。</p>
+  </div>
+
+  <div class="spacer"></div>
+
+  <footer class="sheet-foot">
+    <span class="conf">CONFIDENTIAL</span>
+    <span>Assist Forward — 納品・検収完了証明書</span>
+    <span>1 / 3</span>
+  </footer>
+</section>
+
+<!-- ============ PAGE 2 ============ -->
+<section class="sheet" data-screen-label="Page 2">
+  <header class="runhead">
+    <span class="org">PT LOGIQUE DIGITAL INDONESIA</span>
+    <span class="mid">納品・検収完了証明書</span>
+    <span class="doc">Doc No: LST/BAST/AF/2025</span>
+  </header>
+  <div class="runline"></div>
+
+  <div class="section">
+    <div class="sec-head">
+      <span class="sec-num">2</span>
+      <span class="sec-title">成果物および機能の検収<span class="en">Deliverables &amp; Feature Acceptance</span></span>
+    </div>
+    <p>以下の機能、モジュール、および成果物が完成し、検収のために提出されます。</p>
+
+    <table class="deliv">
+      <thead>
+        <tr>
+          <th class="c-no">No.</th>
+          <th class="c-mod">モジュール</th>
+          <th>機能・成果物</th>
+          <th class="c-st">ステータス</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="c-no">1</td><td class="c-mod">Web プラットフォーム</td><td>認証・認可（ログイン、ロールベースアクセス、SSO）</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">2</td><td class="c-mod">Web プラットフォーム</td><td>ダッシュボード — スーパー管理者（システム概要、分析、KPI）</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">3</td><td class="c-mod">Web プラットフォーム</td><td>ダッシュボード — 店舗管理者（支店レベルの販売概要）</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">4</td><td class="c-mod">Web プラットフォーム</td><td>車両委託管理（登録、追跡、一覧、詳細）</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">5</td><td class="c-mod">Web プラットフォーム</td><td>委託リストおよびステータスフロー管理</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">6</td><td class="c-mod">Web プラットフォーム</td><td>販売取引管理（作成、更新、履歴）</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">7</td><td class="c-mod">Web プラットフォーム</td><td>ユーザー管理（スーパー管理者・店舗管理者ロール）</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">8</td><td class="c-mod">Web プラットフォーム</td><td>店舗・支店管理</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">9</td><td class="c-mod">Web プラットフォーム</td><td>車両マスタデータ管理（メーカー、モデル、年式、グレード）</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">10</td><td class="c-mod">Web プラットフォーム</td><td>レポート・エクスポートモジュール（販売レポート、委託レポート）</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">11</td><td class="c-mod">モバイルアプリ<br><span class="group-tag">iOS / Android</span></td><td>モバイル認証・セキュアセッション管理</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">12</td><td class="c-mod">モバイルアプリ<br><span class="group-tag">iOS / Android</span></td><td>車両点検ワークフロー（ステップ式のガイド付き点検）</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">13</td><td class="c-mod">モバイルアプリ<br><span class="group-tag">iOS / Android</span></td><td>写真撮影・アップロード（多角度、損傷箇所）</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">14</td><td class="c-mod">モバイルアプリ<br><span class="group-tag">iOS / Android</span></td><td>点検レポートの生成・提出</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">15</td><td class="c-mod">モバイルアプリ<br><span class="group-tag">iOS / Android</span></td><td>モバイルからの委託登録</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+        <tr><td class="c-no">16</td><td class="c-mod">モバイルアプリ<br><span class="group-tag">iOS / Android</span></td><td>車両検索・照会</td><td class="c-st"><span class="badge"><span class="tick">✓</span>完了</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="notes">
+    <div class="nh">備考</div>
+    <ul>
+      <li>すべての成果物は、合意済みの本番／ステージング環境への直接デプロイ、または公式メールチャネルを通じて納品されました。</li>
+      <li>本書類は、最終ユーザー受け入れテスト（UAT）の完了後に署名されます。</li>
+      <li>検収後の保証期間中に発見された不具合または問題は、サービス契約の保証条項に基づいて対応されます。</li>
+      <li>本検収後に提起された新機能の要望または範囲の変更は、別個のプロジェクトフェーズとして扱われ、新たな合意の対象となります。</li>
+    </ul>
+  </div>
+
+  <div class="spacer"></div>
+
+  <footer class="sheet-foot">
+    <span class="conf">CONFIDENTIAL</span>
+    <span>Assist Forward — 納品・検収完了証明書</span>
+    <span>2 / 3</span>
+  </footer>
+</section>
+
+<!-- ============ PAGE 3 ============ -->
+<section class="sheet" data-screen-label="Page 3">
+  <header class="runhead">
+    <span class="org">PT LOGIQUE DIGITAL INDONESIA</span>
+    <span class="mid">納品・検収完了証明書</span>
+    <span class="doc">Doc No: LST/BAST/AF/2025</span>
+  </header>
+  <div class="runline"></div>
+
+  <div class="section">
+    <div class="sec-head">
+      <span class="sec-num">3</span>
+      <span class="sec-title">署名による検収<span class="en">Acceptance &amp; Signatures</span></span>
+    </div>
+    <p class="sign-intro">下記の両当事者は、本書類に記載されたすべての成果物の引き渡しおよび検収が完了したことを確認し、その証として署名・捺印します。</p>
+
+    <div class="sign-grid">
+      <div class="sign-card">
+        <div class="party">
+          <div class="nm">PT LOGIQUE DIGITAL INDONESIA</div>
+          <div class="role">受託者／開発者として</div>
+        </div>
+        <div class="body">
+          <div class="sign-field"><span class="lab">氏名</span><span class="ln filled">Takashi Yoshitsugu</span></div>
+          <div class="sign-field"><span class="lab">役職</span><span class="ln filled">President Director（代表取締役）</span></div>
+          <div class="sign-field"><span class="lab">日付</span><span class="ln"></span></div>
+          <div class="stamp">印</div>
+        </div>
+      </div>
+
+      <div class="sign-card">
+        <div class="party">
+          <div class="nm">APPLE AUTO NETWORK CO., LTD.</div>
+          <div class="role">顧客／検収者として</div>
+        </div>
+        <div class="body">
+          <div class="sign-field"><span class="lab">氏名</span><span class="ln"></span></div>
+          <div class="sign-field"><span class="lab">役職</span><span class="ln"></span></div>
+          <div class="sign-field"><span class="lab">日付</span><span class="ln"></span></div>
+          <div class="stamp">印</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="confidential-note">本書類は機密情報であり、記載された当事者のみを対象としています。許可のない配布を禁じます。</p>
+  </div>
+
+  <div class="spacer"></div>
+
+  <footer class="sheet-foot">
+    <span class="conf">CONFIDENTIAL</span>
+    <span>Assist Forward — 納品・検収完了証明書</span>
+    <span>3 / 3</span>
+  </footer>
+</section>
+
+<script>
+(async () => {
+  // Prepend so page-supplied @page / break rules (deck-stage's margin:0,
+  // author CSS) keep source-order precedence over the baseline.
+  const baseCss = document.createElement('style');
+  baseCss.textContent = "@media print {\n  @page { margin: 0.5cm; }\n  html, body { print-color-adjust: exact; -webkit-print-color-adjust: exact; }\n  section, article, figure, table { break-inside: avoid; }\n  *, *::before, *::after {\n    animation-delay: -99s !important; animation-duration: .001s !important;\n    animation-iteration-count: 1 !important; animation-fill-mode: both !important;\n    animation-play-state: running !important; transition-duration: 0s !important;\n  }\n}";
+  document.head.prepend(baseCss);
+  if (document.readyState === 'loading') {
+    await new Promise((r) => document.addEventListener('DOMContentLoaded', r, { once: true }));
+  }
+  let ds = document.querySelector('deck-stage');
+  // whenDefined never resolves when nothing registers the element, so only
+  // await it when a <deck-stage> tag exists (and race a timeout regardless).
+  if (ds && !customElements.get('deck-stage')) {
+    try {
+      await Promise.race([
+        customElements.whenDefined('deck-stage'),
+        new Promise((r) => setTimeout(r, 3000)),
+      ]);
+    } catch (e) {}
+    ds = document.querySelector('deck-stage');
+  }
+  // dc-runtime assigns window.DCLogic at init and mounts into #dc-root on
+  // DOMContentLoaded; settle on that subtree so React has rendered before
+  // print(). Non-DC pages fall through to weighing body.
+  const isDc = !ds && 'DCLogic' in window;
+  const settleRoot = ds || (isDc ? document.getElementById('dc-root') : null) || document.body;
+  if (settleRoot) {
+    // Weigh only content children — skip script/style/template so inline
+    // Babel/CSS doesn't register as stable "content" before the framework
+    // has mounted anything.
+    const MEDIA = 'img,svg,canvas,video,picture,iframe,embed,object';
+    const weigh = () => {
+      let text = 0, media = 0;
+      for (const c of settleRoot.children) {
+        const t = c.tagName;
+        if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+        text += (c.textContent || '').trim().length;
+        media += c.querySelectorAll(MEDIA).length + (c.matches(MEDIA) ? 1 : 0);
+      }
+      return text + media * 100;
+    };
+    // "Non-zero and stable" alone is not sufficient to mean rendered: generic
+    // body can carry a static shell while async main content is pending, and
+    // #dc-root can carry the root DC's static text while child refs are still
+    // .sc-placeholder boxes. Gate generic on readyState 'complete', and never
+    // accept stability while a dc-runtime placeholder is present.
+    const isGeneric = settleRoot === document.body;
+    const deadline = Date.now() + 15000;
+    let last = -1, stable = 0;
+    while (Date.now() < deadline) {
+      const n = weigh();
+      const ready =
+        (!isGeneric || document.readyState === 'complete') &&
+        !settleRoot.querySelector('.sc-placeholder');
+      if (n > 0 && n === last && ready) { if (++stable >= 2) break; } else { stable = 0; }
+      last = n;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+  }
+  try { await document.fonts.ready; } catch (e) {}
+  // Jump every animation to its end state so print() never captures a slide
+  // mid-entrance. Ordering matters: the 0s-transition style must be live
+  // BEFORE data-deck-active is set so attribute-keyed transitions don't
+  // start a (now-0s) run from the pre-active base.
+  const st = document.createElement('style');
+  st.textContent = '*,*::before,*::after{animation-delay:-99s !important;animation-duration:.001s !important;animation-iteration-count:1 !important;animation-fill-mode:both !important;animation-play-state:running !important;transition-duration:0s !important}';
+  document.head.appendChild(st);
+  for (const d of document.querySelectorAll('deck-stage')) {
+    for (const c of d.children) {
+      const t = c.tagName;
+      if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+      c.setAttribute('data-deck-active', '');
+    }
+  }
+  try {
+    const sweep = () => {
+      for (const a of document.getAnimations()) {
+        try { a.finish(); } catch (e) {
+          try { a.currentTime = (a.effect && a.effect.getComputedTiming().duration) || 0; a.pause(); } catch (e2) {}
+        }
+      }
+    };
+    sweep();
+    await new Promise((r) => requestAnimationFrame(r));
+    sweep();
+    await new Promise((r) => requestAnimationFrame(r));
+  } catch (e) {}
+  setTimeout(() => { try { window.print(); } catch (e) {} }, 200);
+})();
+</script>
+</body>
+</html>
